@@ -1,34 +1,43 @@
 import { Component } from '@angular/core';
-import { FormControl,FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  email = new FormControl("",[
-    Validators.required,
-    Validators.email     
-  ])
+  constructor(private authService: AuthService) {}
 
-  password = new FormControl("",[
+  email = new FormControl('', [Validators.required, Validators.email]);
+
+  password = new FormControl('', [
     Validators.required,
-    Validators.minLength(8)
-  ])
+    Validators.minLength(8),
+  ]);
 
   loginForm = new FormGroup({
     email: this.email,
-    password:this.password
-  })
+    password: this.password,
+  });
 
-  login(){
+  login() {
+    this.authService.loginUser(
+      this.loginForm.value.email!,
+      this.loginForm.value.password!
+    );
     console.log(this.loginForm.value);
   }
 
-  reset(){
-    this.loginForm.reset()
+  reset() {
+    this.loginForm.reset();
   }
 }
